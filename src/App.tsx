@@ -1,7 +1,12 @@
+import { create, get } from "@github/webauthn-json";
 import { Button } from "@mantine/core";
 import "./App.css";
-import { postFinishRegister, postStartRegister } from "./api/common";
-import { toPublicKeyCredentialJson } from "./models/auth/PublicKeyCredentialJson";
+import {
+  postFinishLogin,
+  postFinishRegister,
+  postStartLogin,
+  postStartRegister,
+} from "./api/common";
 
 function App() {
   const startRegistration = async () => {
@@ -11,30 +16,38 @@ function App() {
       "Schoggi"
     );
     if (result.ok) {
-      const enc = new TextEncoder();
-      result.data.user.id = enc.encode(
-        result.data.user.id as unknown as string
-      );
-      result.data.challenge = enc.encode(
-        result.data.challenge as unknown as string
-      );
-
       console.log(result.data);
-      const created = await navigator.credentials.create({
-        publicKey: result.data,
-      });
+      const created = await create(result.data.options);
       console.log(created);
-
-      if (created != null && created instanceof PublicKeyCredential) {
-        const result2 = await postFinishRegister(
-          toPublicKeyCredentialJson(created)
-        );
-        console.log(result2);
-      }
+      const result2 = await postFinishRegister(
+        created,
+        result.data.registrationCeremonyId
+      );
+      console.log(result2);
     }
   };
 
-  return <Button onClick={startRegistration}>Register</Button>;
+  const logIn = async () => {
+    const result = await postStartLogin();
+    console.log(result);
+    if (!result.ok) {
+      return;
+    }
+
+    const getResult = await get(result.data.options);
+    const result2 = await postFinishLogin(
+      getResult,
+      result.data.authenticationCeremonyId
+    );
+    console.log(result2);
+  };
+
+  return (
+    <>
+      <Button onClick={startRegistration}>Register</Button>
+      <Button onClick={logIn}>Login</Button>
+    </>
+  );
 }
 
 export default App;

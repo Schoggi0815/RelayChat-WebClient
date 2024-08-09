@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@github/webauthn-json':
+        specifier: ^2.1.1
+        version: 2.1.1
       '@mantine/core':
         specifier: ^7.11.2
         version: 7.11.2(@mantine/hooks@7.11.2(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -325,6 +328,10 @@ packages:
 
   '@floating-ui/utils@0.2.5':
     resolution: {integrity: sha512-sTcG+QZ6fdEUObICavU+aB3Mp8HY4n14wYHdxK4fXjPmv3PXZZeY5RaguJmGyeH/CJQhX3fqKUtS4qc1LoHwhQ==}
+
+  '@github/webauthn-json@2.1.1':
+    resolution: {integrity: sha512-XrftRn4z75SnaJOmZQbt7Mk+IIjqVHw+glDGOxuHwXkZBZh/MBoRS7MHjSZMDaLhT4RjN2VqiEU7EOYleuJWSQ==}
+    hasBin: true
 
   '@humanwhocodes/config-array@0.11.14':
     resolution: {integrity: sha512-3T8LkOmg45BV5FICb15QQMsyUSWrQ8AygVfC7ZG32zOalnqrilm018ZVCw0eapXux8FtA33q8PSRSstjee3jSg==}
@@ -1517,6 +1524,8 @@ snapshots:
       tabbable: 6.2.0
 
   '@floating-ui/utils@0.2.5': {}
+
+  '@github/webauthn-json@2.1.1': {}
 
   '@humanwhocodes/config-array@0.11.14':
     dependencies:
