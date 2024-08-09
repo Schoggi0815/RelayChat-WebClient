@@ -1,41 +1,30 @@
 import {
+  CredentialCreationOptionsJSON,
+  CredentialRequestOptionsJSON,
   PublicKeyCredentialWithAssertionJSON,
   PublicKeyCredentialWithAttestationJSON,
-} from "@github/webauthn-json";
-import { post } from "../apiHelper";
-import { StartRegisterResponse } from "../models/StartRegisterResponse";
-import { StartLoginResponse } from "../models/StartloginResponse";
+} from '@github/webauthn-json'
+import { get, post } from '../apiHelper'
 
-export const base = "/api/v1/";
+export const base = '/api/v1/'
 
-export const postStartRegister = (
-  email: string,
-  username: string,
-  displayname: string
-) =>
-  post<StartRegisterResponse>(`${base}auth/registration/1`, {
+export const postStartRegister = (email: string, displayname: string) =>
+  post<CredentialCreationOptionsJSON>(`${base}auth/registration/1`, {
     email,
-    username,
     displayname,
-  });
+  })
 
 export const postFinishRegister = (
-  credential: PublicKeyCredentialWithAttestationJSON,
-  registrationCeremonyId: string
-) =>
-  post(`${base}auth/registration/2`, {
-    responseJson: credential,
-    registrationCeremonyId,
-  });
+  credential: PublicKeyCredentialWithAttestationJSON
+) => post(`${base}auth/registration/2`, credential)
 
 export const postStartLogin = () =>
-  post<StartLoginResponse>(`${base}auth/login/1`, {});
+  post<CredentialRequestOptionsJSON>(`${base}auth/login/1`, {})
 
 export const postFinishLogin = (
-  credential: PublicKeyCredentialWithAssertionJSON,
-  authenticationCeremonyId: string
-) =>
-  post(`${base}auth/login/2`, {
-    responseJson: credential,
-    authenticationCeremonyId,
-  });
+  credential: PublicKeyCredentialWithAssertionJSON
+) => post(`${base}auth/login/2`, credential)
+
+export const postSignout = () => post(`${base}auth/signout`, {})
+
+export const getUserInformation = () => get<string>(`${base}user/me`)

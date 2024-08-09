@@ -1,6 +1,3 @@
-import { ApiResponse } from "./models/ApiResponse"
-
-
 export const get = async <T>(
   url: string,
   body?: object | string,
@@ -44,7 +41,7 @@ export const put = async <T = unknown>(
   url: string,
   body: object | string | boolean,
   options?: { formData?: boolean; jwt?: string; abort?: AbortController }
-): ApiResponse<T> => {
+): Promise<T> => {
   const response = await fetch(
     url,
     buildRequestInit('put', body, options, options?.jwt)
@@ -57,7 +54,7 @@ export const patch = async <T = unknown>(
   url: string,
   body: object | string,
   options?: { formData?: boolean; jwt?: string; abort?: AbortController }
-): ApiResponse<T> => {
+): Promise<T> => {
   const response = await fetch(
     url,
     buildRequestInit('PATCH', body, options, options?.jwt)
@@ -69,7 +66,7 @@ export const patch = async <T = unknown>(
 export const del = async <T = unknown>(
   url: string,
   options?: { jwt?: string; abort?: AbortController }
-): ApiResponse<T> => {
+): Promise<T> => {
   const response = await fetch(
     url,
     buildRequestInit('delete', undefined, undefined, options?.jwt)
@@ -78,22 +75,14 @@ export const del = async <T = unknown>(
   return handleResponse<T>(response)
 }
 
-const handleResponse = async <T>(response: Response): ApiResponse<T> => {
-  if (response.ok)
-    return {
-      ok: true,
-      data: (await parseData(response)) as T,
-    }
+const handleResponse = async <T>(response: Response): Promise<T> => {
+  if (response.ok) return (await parseData(response)) as T
 
   let error = 'Unknowm error'
   if (response.status === 401) error = 'Incorrect Password'
   else error = await parseError(response.text())
 
-  return {
-    ok: false,
-    error: error,
-    status: response.status,
-  }
+  throw new Error(error)
 }
 
 const parseError = async (textPromise: Promise<string>) =>
