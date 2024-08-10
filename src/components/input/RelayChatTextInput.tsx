@@ -1,5 +1,5 @@
 import { TextInput, TextInputProps } from '@mantine/core'
-import classes from './ProculinaTextInput.module.css'
+import classes from './RelayChatTextInput.module.css'
 import { RevertInputButton } from './RevertInputButton'
 
 export type RelayChatTextInputProps = {

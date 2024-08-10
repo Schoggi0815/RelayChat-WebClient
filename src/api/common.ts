@@ -16,8 +16,13 @@ export const postStartRegister = (email: string, displayname: string) =>
   })
 
 export const postFinishRegister = (
-  credential: PublicKeyCredentialWithAttestationJSON
-) => post(`${base}auth/registration/2`, credential)
+  credential: PublicKeyCredentialWithAttestationJSON,
+  tokenName: string
+) =>
+  post<TokenDto>(`${base}auth/registration/2`, {
+    responseJson: credential,
+    tokenDescription: tokenName,
+  })
 
 export const postStartLogin = () =>
   post<CredentialRequestOptionsJSON>(`${base}auth/login/1`, {})

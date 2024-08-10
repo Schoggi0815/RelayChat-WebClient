@@ -53,7 +53,6 @@ export const LoginProvider = (props: PropsWithChildren) => {
 
     openContextModal({
       modal: 'login',
-      title: 'Login',
       centered: true,
       withCloseButton: false,
       closeOnClickOutside: false,
