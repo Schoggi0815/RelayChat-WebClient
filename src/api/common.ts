@@ -5,6 +5,7 @@ import {
   PublicKeyCredentialWithAttestationJSON,
 } from '@github/webauthn-json'
 import { get, post } from '../apiHelper'
+import { TokenDto } from '../models/TokenDto'
 
 export const base = '/api/v1/'
 
@@ -23,8 +24,10 @@ export const postStartLogin = () =>
 
 export const postFinishLogin = (
   credential: PublicKeyCredentialWithAssertionJSON
-) => post(`${base}auth/login/2`, credential)
+) => post<TokenDto>(`${base}auth/login/2`, credential)
 
-export const postSignout = () => post(`${base}auth/signout`, {})
+export const postRefresh = (token: string, refreshToken: string) =>
+  post<TokenDto>(`${base}auth/refresh`, { token, refreshToken })
 
-export const getUserInformation = () => get<string>(`${base}user/me`)
+export const getUserInformation = (abort: AbortController, jwt: string) =>
+  get<string>(`${base}user/me`, undefined, { jwt, abort })

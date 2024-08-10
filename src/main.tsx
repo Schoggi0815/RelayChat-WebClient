@@ -1,12 +1,11 @@
+import { createTheme, MantineProvider } from '@mantine/core'
+import '@mantine/core/styles.css'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
-import { createTheme, MantineProvider } from '@mantine/core'
-import '@mantine/core/styles.css'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-
-const queryClient = new QueryClient()
+import { LoginProvider } from './LoginContext.tsx'
+import { ModalsProvider } from './ModalsProvider.tsx'
 
 const theme = createTheme({
   autoContrast: true,
@@ -32,9 +31,11 @@ const theme = createTheme({
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <MantineProvider theme={theme} defaultColorScheme="dark">
-      <QueryClientProvider client={queryClient}>
-        <App />
-      </QueryClientProvider>
+      <ModalsProvider>
+        <LoginProvider>
+          <App />
+        </LoginProvider>
+      </ModalsProvider>
     </MantineProvider>
   </React.StrictMode>
 )
