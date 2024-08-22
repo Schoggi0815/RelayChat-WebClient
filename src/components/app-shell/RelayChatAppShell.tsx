@@ -1,6 +1,7 @@
 import {
   ActionIcon,
   AppShell,
+  AppShellHeader,
   AppShellMain,
   AppShellNavbar,
   Box,
@@ -13,12 +14,15 @@ import {
   Title,
   UnstyledButton,
 } from '@mantine/core'
-import { PropsWithChildren, useState } from 'react'
-import { FiUserPlus } from 'react-icons/fi'
+import { PropsWithChildren, useContext, useState } from 'react'
+import { FiLogOut, FiUserPlus } from 'react-icons/fi'
 import { Link } from 'react-router-dom'
 import classes from './RelayChatAppShell.module.css'
+import { LoginContext } from '../../LoginContext'
 
 export const RelayChatAppShell = (props: PropsWithChildren<unknown>) => {
+  const loginContext = useContext(LoginContext)
+
   const [openNavbarPanel, setOpenNavbarPanel] = useState<'Friends' | 'Servers'>(
     'Friends'
   )
@@ -30,8 +34,18 @@ export const RelayChatAppShell = (props: PropsWithChildren<unknown>) => {
         breakpoint: 500,
         collapsed: { desktop: false, mobile: false },
       }}
+      header={{
+        height: 50,
+      }}
     >
       <AppShellMain>{props.children}</AppShellMain>
+      <AppShellHeader>
+        <Group w="100%" justify="flex-end" align="center" p="sm">
+          <ActionIcon onClick={loginContext.logOut}>
+            <FiLogOut />
+          </ActionIcon>
+        </Group>
+      </AppShellHeader>
       <AppShellNavbar>
         <Stack gap={0} h="100%">
           <UnstyledButton w="100%" className={classes.menuButton}>
@@ -47,7 +61,7 @@ export const RelayChatAppShell = (props: PropsWithChildren<unknown>) => {
           </UnstyledButton>
           <ScrollArea
             flex={openNavbarPanel === 'Friends' ? 1 : 0}
-            style={{ transition: 'all 200ms' }}
+            style={{ transition: 'flex 200ms' }}
           >
             <Stack p={16}>
               <UnstyledButton>

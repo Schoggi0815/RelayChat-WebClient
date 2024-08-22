@@ -1,4 +1,5 @@
 import {
+  CredentialCreationOptionsJSON,
   CredentialRequestOptionsJSON,
   PublicKeyCredentialWithAssertionJSON,
   PublicKeyCredentialWithAttestationJSON,
@@ -17,8 +18,11 @@ export const postStartRegister = (email: string, displayname: string) =>
         displayname,
       },
     },
-    (value): value is CredentialRequestOptionsJSON =>
-      typeof value === 'object' && value != null
+    (value): value is CredentialCreationOptionsJSON =>
+      typeof value === 'object' &&
+      value != null &&
+      'publicKey' in value &&
+      typeof value.publicKey === 'object'
   )
 
 export const postFinishRegister = (

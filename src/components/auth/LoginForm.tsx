@@ -5,6 +5,7 @@ import { FiAlertCircle } from 'react-icons/fi'
 import { postStartLogin, postFinishLogin } from '../../api/common'
 import { TokenDto } from '../../models/TokenDto'
 import { AsyncButton } from '../input/AsyncButton'
+import { FetchError } from '../../api/fetchError'
 
 export type LoginFormProps = {
   toRegisterForm: () => void
@@ -15,21 +16,18 @@ export const LoginForm = ({ onSuccess, toRegisterForm }: LoginFormProps) => {
   const [error, setError] = useState<string>()
 
   const login = async () => {
-    const result = await postStartLogin()
-    if (!result.ok) {
-      setError(result.error)
-      return
-    }
+    try {
+      const result = await postStartLogin()
+      const getResult = await get(result)
+      const result2 = await postFinishLogin(getResult)
 
-    const getResult = await get(result.data)
-    const result2 = await postFinishLogin(getResult)
-    if (!result2.ok) {
-      setError(result2.error)
-      return
+      setError(undefined)
+      onSuccess(result2)
+    } catch (error) {
+      if (error instanceof FetchError) {
+        setError(error.message)
+      }
     }
-
-    setError(undefined)
-    onSuccess(result2.data)
   }
 
   return (

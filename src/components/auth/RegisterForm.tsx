@@ -9,6 +9,7 @@ import { postFinishRegister, postStartRegister } from '../../api/common'
 import { TokenDto } from '../../models/TokenDto'
 import { AsyncButton } from '../input/AsyncButton'
 import { RelayChatTextInput } from '../input/RelayChatTextInput'
+import { FetchError } from '../../api/fetchError'
 
 export type RegisterFormProps = {
   onSuccess: (tokenDto: TokenDto) => void
@@ -46,17 +47,20 @@ export const RegisterForm = ({ toLoginForm, onSuccess }: RegisterFormProps) => {
       return
     }
 
-    const startRegisterResult = await postStartRegister(email, displayName)
-    if (!startRegisterResult.ok) {
-      setError(startRegisterResult.error)
-      return
+    try {
+      const startRegisterResult = await postStartRegister(email, displayName)
+
+      setError('')
+
+      setCredentialCreationOtions(await create(startRegisterResult))
+
+      setTokenName('')
+      setInvalidTokenName(false)
+    } catch (error) {
+      if (error instanceof FetchError) {
+        setError(error.message)
+      }
     }
-    setError('')
-
-    setCredentialCreationOtions(await create(startRegisterResult.data))
-
-    setTokenName('')
-    setInvalidTokenName(false)
   }
 
   const finishRegister = async () => {
@@ -71,17 +75,19 @@ export const RegisterForm = ({ toLoginForm, onSuccess }: RegisterFormProps) => {
       setInvalidTokenName(false)
     }
 
-    const finishRegistrationResult = await postFinishRegister(
-      credentialCreationOptions,
-      tokenName
-    )
-    if (!finishRegistrationResult.ok) {
-      setError(finishRegistrationResult.error)
-      return
-    }
-    setError('')
+    try {
+      const finishRegistrationResult = await postFinishRegister(
+        credentialCreationOptions,
+        tokenName
+      )
+      setError('')
 
-    onSuccess(finishRegistrationResult.data)
+      onSuccess(finishRegistrationResult)
+    } catch (error) {
+      if (error instanceof FetchError) {
+        setError(error.message)
+      }
+    }
   }
 
   return (

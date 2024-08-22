@@ -1,16 +1,16 @@
-import { openContextModal, closeModal } from '@mantine/modals'
+import { closeModal, openContextModal } from '@mantine/modals'
 import {
   createContext,
   PropsWithChildren,
-  useState,
-  useRef,
   useCallback,
   useEffect,
   useMemo,
+  useRef,
+  useState,
 } from 'react'
 import { postRefresh } from './api/common'
 import { TokenDto } from './models/TokenDto'
-import { parseJwt, hasExpiryDate, createLock } from './utils'
+import { createLock, hasExpiryDate, parseJwt } from './utils'
 
 export type LoginContextType = {
   getJwt: () => Promise<string>
@@ -138,19 +138,19 @@ export const LoginProvider = (props: PropsWithChildren) => {
       return token.current.token
     }
 
-    const result = await postRefresh(
-      token.current.token,
-      token.current.refreshToken
-    )
+    try {
+      const result = await postRefresh(
+        token.current.token,
+        token.current.refreshToken
+      )
 
-    if (!result.ok) {
+      setToken(result)
+      return result.token
+    } catch (_) {
       const newToken = await openLoginModal()
       setToken(newToken)
       return newToken.token
     }
-
-    setToken(result.data)
-    return result.data.token
   }, [openLoginModal])
 
   const getJwtLocked = useCallback(
