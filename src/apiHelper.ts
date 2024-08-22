@@ -44,7 +44,9 @@ export const handleResponse2 = async <T>(
 
   const json: unknown = await response.json()
   if (!isT(json)) {
-    throw new Error('Response does not match expected Type!')
+    throw new Error(
+      'Response does not match expected Type. Make sure your client is up to date.'
+    )
   }
   return json
 }
