@@ -50,3 +50,8 @@ export const hasExpiryDate = (data: unknown): data is { exp: number } =>
   data != null &&
   'exp' in data &&
   typeof data.exp === 'number'
+
+export const isListOf =
+  <T>(isFunction: (value: unknown) => value is T) =>
+  (value: unknown): value is T[] =>
+    Array.isArray(value) && value.every(v => isFunction(v))

@@ -28,7 +28,7 @@ export const RegisterForm = ({ toLoginForm, onSuccess }: RegisterFormProps) => {
 
   const startRegister = async () => {
     let isValid = true
-    if (!/^[\w\-\.]+@([\w-]+\.)+[\w-]{2,}$/.test(email)) {
+    if (!/^[\w\-.]+@([\w-]+\.)+[\w-]{2,}$/.test(email)) {
       setInvalidEmail(true)
       isValid = false
     } else {

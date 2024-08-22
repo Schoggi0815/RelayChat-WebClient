@@ -1,23 +1,23 @@
 import { Center } from '@mantine/core'
-import { getUserInformation } from './api/common'
+import { getUserInformation, getUserInformation2 } from './api/common'
 import { ApiRequester } from './components/auth/ApiRequester'
 import { useAuthedRequest } from './hooks/useAuthedRequest'
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
 
 function App() {
   const getInfo = useAuthedRequest(getUserInformation)
+  const getInfo2 = useAuthedRequest(getUserInformation2)
 
-  // const startRegistration = async () => {
-  //   if (!email || !displayName) {
-  //     return
-  //   }
-
-  //   const result = await postStartRegister(email, displayName)
-  //   console.log(result)
-  //   const created = await create(result)
-  //   console.log(created)
-  //   const result2 = await postFinishRegister(created)
-  //   console.log(result2)
-  // }
+  const { data, isLoading } = useQuery({
+    queryKey: ['userInfo'],
+    queryFn: async ({ signal }) => getInfo2(signal),
+  })
 
   return (
     <Center mt={100}>

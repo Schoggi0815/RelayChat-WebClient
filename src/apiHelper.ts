@@ -1,5 +1,54 @@
 import { ApiResponse } from './models/ApiResponse'
 
+export const get2 = async <T>(
+  url: string,
+  options: { jwt?: string; body?: unknown; abort: AbortSignal },
+  isT: (value: unknown) => value is T
+): Promise<T> =>
+  await handleResponse2(
+    await fetch(url, buildRequestInit2('GET', options)),
+    isT
+  )
+
+export const buildRequestInit2 = (
+  method: string,
+  options: { jwt?: string; body?: unknown; abort: AbortSignal }
+) => {
+  const init: RequestInit = { method }
+
+  if (options.body != null) init.body = JSON.stringify(options.body)
+
+  init.headers = {
+    ...init.headers,
+    'Content-Type': 'application/json',
+  }
+
+  init.signal = options.abort
+
+  if (options.jwt)
+    init.headers = {
+      ...init.headers,
+      Authorization: `Bearer ${options.jwt}`,
+    }
+
+  return init
+}
+
+export const handleResponse2 = async <T>(
+  response: Response,
+  isT: (value: unknown) => value is T
+): Promise<T> => {
+  if (!response.ok) {
+    throw new Error(response.statusText)
+  }
+
+  const json: unknown = await response.json()
+  if (!isT(json)) {
+    throw new Error('Response does not match expected Type!')
+  }
+  return json
+}
+
 export const get = async <T>(
   url: string,
   body?: object | string,

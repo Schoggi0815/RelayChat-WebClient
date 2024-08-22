@@ -4,7 +4,7 @@ import {
   PublicKeyCredentialWithAssertionJSON,
   PublicKeyCredentialWithAttestationJSON,
 } from '@github/webauthn-json'
-import { get, post } from '../apiHelper'
+import { get, get2, post } from '../apiHelper'
 import { TokenDto } from '../models/TokenDto'
 
 export const base = '/api/v1/'
@@ -36,3 +36,10 @@ export const postRefresh = (token: string, refreshToken: string) =>
 
 export const getUserInformation = (abort: AbortController, jwt: string) =>
   get<string>(`${base}user/me`, undefined, { jwt, abort })
+
+export const getUserInformation2 = (abort: AbortSignal, jwt: string) =>
+  get2(
+    `${base}user/me`,
+    { jwt, abort },
+    (value: unknown) => typeof value === 'string'
+  )
