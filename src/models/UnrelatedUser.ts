@@ -1,9 +1,9 @@
+import { hasProp, isObject } from './helper'
+
 export type UnrelatedUser = {
   displayName: string
 }
 
 export const isUnrelateUser = (value: unknown): value is UnrelatedUser =>
-  typeof value === 'object' &&
-  value != null &&
-  'displayName' in value &&
-  typeof value.displayName === 'string'
+  isObject(value) &&
+  hasProp<UnrelatedUser, 'displayName'>(value, 'displayName', 'string')

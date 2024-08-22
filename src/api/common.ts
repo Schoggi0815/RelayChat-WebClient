@@ -1,44 +1,58 @@
 import {
-  CredentialCreationOptionsJSON,
   CredentialRequestOptionsJSON,
   PublicKeyCredentialWithAssertionJSON,
   PublicKeyCredentialWithAttestationJSON,
 } from '@github/webauthn-json'
-import { get, get2, post } from '../apiHelper'
-import { TokenDto } from '../models/TokenDto'
+import { get, post } from '../apiHelper'
+import { isTokenDto } from '../models/TokenDto'
 
 export const base = '/api/v1/'
 
 export const postStartRegister = (email: string, displayname: string) =>
-  post<CredentialCreationOptionsJSON>(`${base}auth/registration/1`, {
-    email,
-    displayname,
-  })
+  post(
+    `${base}auth/registration/1`,
+    {
+      body: {
+        email,
+        displayname,
+      },
+    },
+    (value): value is CredentialRequestOptionsJSON =>
+      typeof value === 'object' && value != null
+  )
 
 export const postFinishRegister = (
   credential: PublicKeyCredentialWithAttestationJSON,
   tokenName: string
 ) =>
-  post<TokenDto>(`${base}auth/registration/2`, {
-    responseJson: credential,
-    tokenDescription: tokenName,
-  })
+  post(
+    `${base}auth/registration/2`,
+    {
+      body: {
+        responseJson: credential,
+        tokenDescription: tokenName,
+      },
+    },
+    isTokenDto
+  )
 
 export const postStartLogin = () =>
-  post<CredentialRequestOptionsJSON>(`${base}auth/login/1`, {})
+  post(
+    `${base}auth/login/1`,
+    {},
+    (value): value is CredentialRequestOptionsJSON =>
+      typeof value === 'object' && value != null
+  )
 
 export const postFinishLogin = (
   credential: PublicKeyCredentialWithAssertionJSON
-) => post<TokenDto>(`${base}auth/login/2`, credential)
+) => post(`${base}auth/login/2`, { body: credential }, isTokenDto)
 
 export const postRefresh = (token: string, refreshToken: string) =>
-  post<TokenDto>(`${base}auth/refresh`, { token, refreshToken })
+  post(`${base}auth/refresh`, { body: { token, refreshToken } }, isTokenDto)
 
-export const getUserInformation = (abort: AbortController, jwt: string) =>
-  get<string>(`${base}user/me`, undefined, { jwt, abort })
-
-export const getUserInformation2 = (abort: AbortSignal, jwt: string) =>
-  get2(
+export const getUserInformation = (abort: AbortSignal, jwt: string) =>
+  get(
     `${base}user/me`,
     { jwt, abort },
     (value: unknown) => typeof value === 'string'
