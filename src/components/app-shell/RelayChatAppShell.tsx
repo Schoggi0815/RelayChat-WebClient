@@ -11,14 +11,18 @@ import {
   Skeleton,
   Stack,
   Text,
+  ThemeIcon,
   Title,
   UnstyledButton,
 } from '@mantine/core'
 import { PropsWithChildren, useContext, useState } from 'react'
-import { FiLogOut, FiUserPlus } from 'react-icons/fi'
+import { FiLogOut, FiUser, FiUserPlus, FiUsers } from 'react-icons/fi'
 import { Link } from 'react-router-dom'
 import classes from './RelayChatAppShell.module.css'
 import { LoginContext } from '../../LoginContext'
+import { useAuthedRequest } from '../../hooks/useAuthedRequest'
+import { getFriends } from '../../api/friends'
+import { useQuery } from '@tanstack/react-query'
 
 export const RelayChatAppShell = (props: PropsWithChildren<unknown>) => {
   const loginContext = useContext(LoginContext)
@@ -26,6 +30,13 @@ export const RelayChatAppShell = (props: PropsWithChildren<unknown>) => {
   const [openNavbarPanel, setOpenNavbarPanel] = useState<'Friends' | 'Servers'>(
     'Friends'
   )
+
+  const getFriendsAuthed = useAuthedRequest(getFriends)
+
+  const { data: friends, isLoading: friendsLoading } = useQuery({
+    queryKey: ['friends'],
+    queryFn: async ({ signal }) => getFriendsAuthed(signal),
+  })
 
   return (
     <AppShell
@@ -78,12 +89,39 @@ export const RelayChatAppShell = (props: PropsWithChildren<unknown>) => {
                   <Text>Add Friends</Text>
                 </Group>
               </UnstyledButton>
-              {[...Array(10).keys()].map(() => (
+              <UnstyledButton>
                 <Group>
-                  <Skeleton height={50} circle />
-                  <Skeleton height={20} width={150} />
+                  <ActionIcon
+                    radius="xl"
+                    size="xl"
+                    variant="outline"
+                    component={Link}
+                    to="/friend-requests"
+                  >
+                    <FiUsers />
+                  </ActionIcon>
+                  <Text>Friend Requests</Text>
                 </Group>
-              ))}
+              </UnstyledButton>
+              {friendsLoading ? (
+                [...Array(10).keys()].map(() => (
+                  <Group>
+                    <Skeleton height={44} circle />
+                    <Skeleton height={20} width={150} />
+                  </Group>
+                ))
+              ) : friends?.length ?? 0 > 0 ? (
+                friends?.map(friend => (
+                  <Group>
+                    <ThemeIcon radius="xl" size="xl" variant="default">
+                      <FiUser />
+                    </ThemeIcon>
+                    <Text>{friend.displayName}</Text>
+                  </Group>
+                ))
+              ) : (
+                <Text>No friends :(</Text>
+              )}
             </Stack>
           </ScrollArea>
           <Divider />

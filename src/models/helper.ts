@@ -28,3 +28,18 @@ export const hasProp = <TObject, TName extends keyof TObject>(
   propertyName: TName,
   type: NoInfer<TypeString<TObject[TName]>>
 ) => propertyName in value && typeof value[propertyName] === type
+
+export const hasPropObject = <TProp>(
+  value: Record<string | number | symbol, unknown>,
+  propertyName: string,
+  isProp: (propValue: unknown) => propValue is TProp
+) => propertyName in value && isProp(value[propertyName])
+
+export const hasPropObjectNullable = <TProp>(
+  value: Record<string | number | symbol, unknown>,
+  propertyName: string,
+  isProp: (propValue: unknown) => propValue is TProp
+) =>
+  (propertyName in value && isProp(value[propertyName])) ||
+  !(propertyName in value) ||
+  value[propertyName] == null

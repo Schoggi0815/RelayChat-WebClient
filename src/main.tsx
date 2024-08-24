@@ -9,6 +9,7 @@ import { LoginProvider } from './LoginContext.tsx'
 import { ModalsProvider } from './ModalsProvider.tsx'
 import { FriendsWindow } from './components/windows/FriendsWindow.tsx'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { FriendRequestsWindow } from './components/windows/FriendRequestsWindows.tsx'
 
 const theme = createTheme({
   autoContrast: true,
@@ -37,6 +38,7 @@ const router = createBrowserRouter([
     element: <HomeWindow />,
   },
   { path: '/friends', element: <FriendsWindow /> },
+  { path: '/friend-requests', element: <FriendRequestsWindow /> },
 ])
 
 const queryClient = new QueryClient()
