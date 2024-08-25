@@ -116,14 +116,15 @@ export const DirectMessagesWindow = () => {
 
   return (
     <RelayChatAppShell>
-      <Stack mah="100%" flex={1} justify="space-between" p="sm">
+      <Stack mah="100%" flex={1} justify="space-between" p="sm" pt={0} pr={0}>
         <Box flex={1} style={{ overflow: 'auto' }}>
           <ScrollAreaAutosize
             offsetScrollbars
             mah="100%"
             viewportRef={viewport}
+            type="scroll"
           >
-            <Stack>
+            <Stack gap={0}>
               {isLoading
                 ? [...Array(10).keys()].map(i => (
                     <Group key={i}>
@@ -131,68 +132,83 @@ export const DirectMessagesWindow = () => {
                       <Skeleton height={20} width={150} />
                     </Group>
                   ))
-                : mappedMessages?.map(messageGroup => (
-                    <Group
-                      key={messageGroup.key}
-                      align="flex-start"
-                      gap="xs"
-                      style={{
-                        flexDirection:
-                          messageGroup.senderId === user.id
-                            ? 'row-reverse'
-                            : 'row',
-                      }}
-                      wrap="nowrap"
-                    >
-                      <ThemeIcon size="xl" radius="xl" variant="default">
-                        <FiUser />
-                      </ThemeIcon>
-                      <Stack
-                        align={
-                          messageGroup.senderId === user.id
-                            ? 'flex-end'
-                            : 'flex-start'
-                        }
+                : chatMessages?.map((message, index) => {
+                    const isFirstOfGroup =
+                      chatMessages[index - 1]?.senderId !== message.senderId
+                    return (
+                      <Group
+                        key={message.id}
+                        align="flex-start"
                         gap="xs"
+                        style={{
+                          flexDirection:
+                            message.senderId === user.id
+                              ? 'row-reverse'
+                              : 'row',
+                          alignSelf:
+                            message.senderId === user.id
+                              ? 'flex-end'
+                              : 'flex-start',
+                        }}
+                        wrap="nowrap"
                         maw="80%"
                       >
-                        <Title order={4} c="relay">
-                          {messageGroup.senderId === user.id
-                            ? you?.displayName
-                            : otherUser?.displayName}
-                        </Title>
-                        <Stack
-                          gap="xs"
-                          align={
-                            messageGroup.senderId === user.id
-                              ? 'flex-end'
-                              : 'flex-start'
-                          }
-                          w="100%"
-                        >
-                          {messageGroup.messages.map(message => (
+                        {isFirstOfGroup ? (
+                          <>
+                            <ThemeIcon size="xl" radius="xl" variant="default">
+                              <FiUser />
+                            </ThemeIcon>
+                            <Stack gap={0}>
+                              <Title
+                                order={4}
+                                c="relay"
+                                ta={
+                                  message.senderId === user.id ? 'end' : 'start'
+                                }
+                              >
+                                {message.senderId === user.id
+                                  ? you?.displayName
+                                  : otherUser?.displayName}
+                              </Title>
+                              <Text
+                                component="pre"
+                                ta={
+                                  message.senderId === user.id ? 'end' : 'start'
+                                }
+                                style={{
+                                  textWrap: 'wrap',
+                                }}
+                              >
+                                {message.message}
+                              </Text>
+                            </Stack>
+                          </>
+                        ) : (
+                          <>
+                            <Box w={44} h="100%" />
                             <Text
+                              flex={1}
                               component="pre"
+                              ta={
+                                message.senderId === user.id ? 'end' : 'start'
+                              }
                               style={{
                                 textWrap: 'wrap',
-                                textAlign:
-                                  messageGroup.senderId === user.id
-                                    ? 'end'
-                                    : 'start',
                               }}
                             >
                               {message.message}
                             </Text>
-                          ))}
-                        </Stack>
-                      </Stack>
-                    </Group>
-                  ))}
+                          </>
+                        )}
+                      </Group>
+                    )
+                  })}
             </Stack>
           </ScrollAreaAutosize>
         </Box>
         <form onSubmit={onSubmit}>
           <Textarea
+            pr="sm"
             minRows={1}
             maxRows={4}
             autosize
