@@ -1,9 +1,9 @@
-import { Group, Loader, Stack, Text, ThemeIcon, Title } from '@mantine/core'
-import { RelayChatAppShell } from '../app-shell/RelayChatAppShell'
-import { useAuthedRequest } from '../../hooks/useAuthedRequest'
-import { searchUsers } from '../../api/friends'
+import { Loader, Stack, Title } from '@mantine/core'
 import { useQuery } from '@tanstack/react-query'
-import { FiUser } from 'react-icons/fi'
+import { searchUsers } from '../../api/friends'
+import { useAuthedRequest } from '../../hooks/useAuthedRequest'
+import { RelayChatAppShell } from '../app-shell/RelayChatAppShell'
+import { FriendSearchUser } from '../FriendSearchUser'
 
 export const FriendsWindow = () => {
   const getUsersAuthed = useAuthedRequest(searchUsers)
@@ -15,19 +15,12 @@ export const FriendsWindow = () => {
 
   return (
     <RelayChatAppShell>
-      <Title>Friends</Title>
+      <Title>Search for People</Title>
       <Stack>
         {isLoading ? (
           <Loader />
         ) : (
-          users?.map(user => (
-            <Group>
-              <ThemeIcon radius="xl" size="xl">
-                <FiUser />
-              </ThemeIcon>
-              <Text>{user.displayName}</Text>
-            </Group>
-          ))
+          users?.map(user => <FriendSearchUser user={user} />)
         )}
       </Stack>
     </RelayChatAppShell>

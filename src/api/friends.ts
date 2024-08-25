@@ -33,3 +33,17 @@ export const postAcceptFriendRequest = (senderId: string, jwt: string) =>
     { jwt },
     isUnrelateUser
   )
+
+export const getUnreadFriendRequests = (abort: AbortSignal, jwt: string) =>
+  get(
+    `${base}users/friend-requests/unread`,
+    { jwt, abort },
+    isListOf(isFriendRequest)
+  )
+
+export const markAllFriendRequestsAsRead = (jwt: string) =>
+  post(
+    `${base}users/friend-requests/read`,
+    { jwt },
+    (value: unknown): value is undefined => value === undefined
+  )

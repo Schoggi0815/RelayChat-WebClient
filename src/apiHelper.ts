@@ -49,7 +49,10 @@ export const handleResponse = async <T>(
     throw new FetchError(response.statusText, response.status)
   }
 
-  const json: unknown = await response.json()
+  let json: unknown = undefined
+  if (response.status !== 204) {
+    json = await response.json()
+  }
   if (!isT(json)) {
     throw new Error(
       'Response does not match expected Type. Make sure your client is up to date.'

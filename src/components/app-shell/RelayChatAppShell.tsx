@@ -7,6 +7,7 @@ import {
   Box,
   Divider,
   Group,
+  Indicator,
   ScrollArea,
   Skeleton,
   Stack,
@@ -21,7 +22,7 @@ import { Link } from 'react-router-dom'
 import classes from './RelayChatAppShell.module.css'
 import { LoginContext } from '../../LoginContext'
 import { useAuthedRequest } from '../../hooks/useAuthedRequest'
-import { getFriends } from '../../api/friends'
+import { getFriends, getUnreadFriendRequests } from '../../api/friends'
 import { useQuery } from '@tanstack/react-query'
 
 export const RelayChatAppShell = (props: PropsWithChildren<unknown>) => {
@@ -32,10 +33,18 @@ export const RelayChatAppShell = (props: PropsWithChildren<unknown>) => {
   )
 
   const getFriendsAuthed = useAuthedRequest(getFriends)
+  const getUnreadFriendRequestsAuthed = useAuthedRequest(
+    getUnreadFriendRequests
+  )
 
   const { data: friends, isLoading: friendsLoading } = useQuery({
     queryKey: ['friends'],
     queryFn: async ({ signal }) => getFriendsAuthed(signal),
+  })
+
+  const { data: unreadFriendRequests } = useQuery({
+    queryKey: ['friend-requests-unread'],
+    queryFn: async ({ signal }) => getUnreadFriendRequestsAuthed(signal),
   })
 
   return (
@@ -91,15 +100,25 @@ export const RelayChatAppShell = (props: PropsWithChildren<unknown>) => {
               </UnstyledButton>
               <UnstyledButton>
                 <Group>
-                  <ActionIcon
-                    radius="xl"
-                    size="xl"
-                    variant="outline"
-                    component={Link}
-                    to="/friend-requests"
+                  <Indicator
+                    label={unreadFriendRequests?.length}
+                    disabled={
+                      !unreadFriendRequests || unreadFriendRequests.length < 1
+                    }
+                    color="red"
+                    size={16}
+                    offset={4}
                   >
-                    <FiUsers />
-                  </ActionIcon>
+                    <ActionIcon
+                      radius="xl"
+                      size="xl"
+                      variant="outline"
+                      component={Link}
+                      to="/friend-requests"
+                    >
+                      <FiUsers />
+                    </ActionIcon>
+                  </Indicator>
                   <Text>Friend Requests</Text>
                 </Group>
               </UnstyledButton>
