@@ -46,13 +46,13 @@ const queryClient = new QueryClient()
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <MantineProvider theme={theme} defaultColorScheme="dark">
-      <ModalsProvider>
-        <LoginProvider>
-          <QueryClientProvider client={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <ModalsProvider>
+          <LoginProvider>
             <RouterProvider router={router} />
-          </QueryClientProvider>
-        </LoginProvider>
-      </ModalsProvider>
+          </LoginProvider>
+        </ModalsProvider>
+      </QueryClientProvider>
     </MantineProvider>
   </React.StrictMode>
 )

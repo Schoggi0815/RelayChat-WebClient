@@ -17,6 +17,19 @@ export const post = async <T>(
 ) =>
   await handleResponse(await fetch(url, buildRequestInit('POST', options)), isT)
 
+export const del = async <T>(
+  url: string,
+  options: {
+    jwt?: string
+    body?: unknown
+  },
+  isT: (value: unknown) => value is T
+) =>
+  await handleResponse(
+    await fetch(url, buildRequestInit('DELETE', options)),
+    isT
+  )
+
 export const buildRequestInit = (
   method: string,
   options: { jwt?: string; body?: unknown; abort?: AbortSignal }
@@ -60,3 +73,6 @@ export const handleResponse = async <T>(
   }
   return json
 }
+
+export const isUndefined = (value: unknown): value is undefined =>
+  value === undefined

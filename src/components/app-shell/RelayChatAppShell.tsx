@@ -12,18 +12,18 @@ import {
   Skeleton,
   Stack,
   Text,
-  ThemeIcon,
   Title,
   UnstyledButton,
 } from '@mantine/core'
-import { PropsWithChildren, useContext, useState } from 'react'
-import { FiLogOut, FiUser, FiUserPlus, FiUsers } from 'react-icons/fi'
-import { Link } from 'react-router-dom'
-import classes from './RelayChatAppShell.module.css'
-import { LoginContext } from '../../LoginContext'
-import { useAuthedRequest } from '../../hooks/useAuthedRequest'
-import { getFriends, getUnreadFriendRequests } from '../../api/friends'
 import { useQuery } from '@tanstack/react-query'
+import { PropsWithChildren, useContext, useState } from 'react'
+import { FiLogOut, FiUserPlus, FiUsers } from 'react-icons/fi'
+import { Link } from 'react-router-dom'
+import { LoginContext } from '../../LoginContext'
+import { getFriends, getUnreadFriendRequests } from '../../api/friends'
+import { useAuthedRequest } from '../../hooks/useAuthedRequest'
+import { FriendNavigationItem } from '../FriendNavigationItem'
+import classes from './RelayChatAppShell.module.css'
 
 export const RelayChatAppShell = (props: PropsWithChildren<unknown>) => {
   const loginContext = useContext(LoginContext)
@@ -130,14 +130,7 @@ export const RelayChatAppShell = (props: PropsWithChildren<unknown>) => {
                   </Group>
                 ))
               ) : friends?.length ?? 0 > 0 ? (
-                friends?.map(friend => (
-                  <Group>
-                    <ThemeIcon radius="xl" size="xl" variant="default">
-                      <FiUser />
-                    </ThemeIcon>
-                    <Text>{friend.displayName}</Text>
-                  </Group>
-                ))
+                friends?.map(friend => <FriendNavigationItem friend={friend} />)
               ) : (
                 <Text>No friends :(</Text>
               )}

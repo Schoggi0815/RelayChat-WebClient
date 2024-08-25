@@ -1,4 +1,4 @@
-import { get, post } from '../apiHelper'
+import { del, get, isUndefined, post } from '../apiHelper'
 import { isFriendRequest } from '../models/FriendRequest'
 import { isUnrelateUser } from '../models/UnrelatedUser'
 import { isListOf } from '../utils'
@@ -42,8 +42,7 @@ export const getUnreadFriendRequests = (abort: AbortSignal, jwt: string) =>
   )
 
 export const markAllFriendRequestsAsRead = (jwt: string) =>
-  post(
-    `${base}users/friend-requests/read`,
-    { jwt },
-    (value: unknown): value is undefined => value === undefined
-  )
+  post(`${base}users/friend-requests/read`, { jwt }, isUndefined)
+
+export const removeFriend = (friendId: string, jwt: string) =>
+  del(`${base}users/friends/${friendId}`, { jwt }, isUndefined)

@@ -1,19 +1,9 @@
-import { get } from '@github/webauthn-json'
-import {
-  Alert,
-  Box,
-  Button,
-  ButtonProps,
-  Group,
-  Stack,
-  Text,
-} from '@mantine/core'
+import { Box, Button, ButtonProps, Group, Stack, Text } from '@mantine/core'
 import { ContextModalProps, ModalsProvider as MP } from '@mantine/modals'
 import { PropsWithChildren, useState } from 'react'
-import { FiAlertCircle } from 'react-icons/fi'
-import { postFinishLogin, postStartLogin } from './api/common'
-import { TokenDto } from './models/TokenDto'
 import { LoginAndRegisterForm } from './components/auth/LoginAndRegisterForm'
+import { TokenDto } from './models/TokenDto'
+import { UserContextModal } from './components/modals/UserContextModal'
 
 const LoginModal = ({
   context,
@@ -106,6 +96,7 @@ const AsyncConfirmModal = ({
 const modals = {
   login: LoginModal,
   asyncConfirm: AsyncConfirmModal,
+  user: UserContextModal,
 }
 declare module '@mantine/modals' {
   export interface MantineModalsOverride {

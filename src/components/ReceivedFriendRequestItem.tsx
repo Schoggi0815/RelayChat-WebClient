@@ -1,6 +1,6 @@
 import { Group, ThemeIcon, ActionIcon, Text } from '@mantine/core'
 import { FiUser, FiCheck } from 'react-icons/fi'
-import { FriendRequest } from '../models/FriendRequest'
+import { FriendRequest, isFriendRequest } from '../models/FriendRequest'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { isUnrelateUser } from '../models/UnrelatedUser'
 import { isListOf } from '../utils'
@@ -22,11 +22,19 @@ export const ReceivedFriendRequestItem = ({
     mutationFn: async () => await acceptRequestAuthed(recievedRequest.senderId),
     onSuccess: newFriend => {
       const currentFriends = queryClient.getQueryData(['friends'])
-      if (!isListOf(isUnrelateUser)(currentFriends)) {
-        throw new Error('Current friends of wrong type')
+      if (isListOf(isUnrelateUser)(currentFriends)) {
+        queryClient.setQueryData(['friends'], [newFriend, ...currentFriends])
       }
 
-      queryClient.setQueryData(['friends'], [newFriend, ...currentFriends])
+      const recievedFriendRequests = queryClient.getQueryData([
+        'recieved-friend-requests',
+      ])
+      if (isListOf(isFriendRequest)(recievedFriendRequests)) {
+        queryClient.setQueryData(
+          ['recieved-friend-requests'],
+          recievedFriendRequests.filter(fr => fr.senderId !== newFriend.id)
+        )
+      }
     },
   })
 
