@@ -58,7 +58,9 @@ export const RelayChatAppShell = (props: PropsWithChildren<unknown>) => {
         height: 50,
       }}
     >
-      <AppShellMain>{props.children}</AppShellMain>
+      <AppShellMain display="flex" mah="100vh">
+        {props.children}
+      </AppShellMain>
       <AppShellHeader>
         <Group w="100%" justify="flex-end" align="center" p="sm">
           <ActionIcon onClick={loginContext.logOut}>
@@ -123,14 +125,16 @@ export const RelayChatAppShell = (props: PropsWithChildren<unknown>) => {
                 </Group>
               </UnstyledButton>
               {friendsLoading ? (
-                [...Array(10).keys()].map(() => (
-                  <Group>
+                [...Array(10).keys()].map(i => (
+                  <Group key={i}>
                     <Skeleton height={44} circle />
                     <Skeleton height={20} width={150} />
                   </Group>
                 ))
               ) : friends?.length ?? 0 > 0 ? (
-                friends?.map(friend => <FriendNavigationItem friend={friend} />)
+                friends?.map(friend => (
+                  <FriendNavigationItem key={friend.id} friend={friend} />
+                ))
               ) : (
                 <Text>No friends :(</Text>
               )}
@@ -150,14 +154,14 @@ export const RelayChatAppShell = (props: PropsWithChildren<unknown>) => {
           >
             <Group p={16}>
               <Stack h="100%">
-                {[...Array(10).keys()].map(() => (
-                  <Skeleton height={50} circle />
+                {[...Array(10).keys()].map(i => (
+                  <Skeleton key={i} height={50} circle />
                 ))}
               </Stack>
               <Box bg="gray" flex={1} h="100%">
                 <Stack p="sm">
-                  {[...Array(10).keys()].map(() => (
-                    <Group>
+                  {[...Array(10).keys()].map(i => (
+                    <Group key={i}>
                       <Skeleton height={10} circle />
                       <Skeleton height={10} width={100} />
                     </Group>

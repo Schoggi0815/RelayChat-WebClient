@@ -20,6 +20,7 @@ export type LoginContextType = {
 
 type User = {
   email: string
+  id: string
 }
 
 export const LoginContext = createContext<LoginContextType>({
@@ -28,6 +29,7 @@ export const LoginContext = createContext<LoginContextType>({
   },
   user: {
     email: '',
+    id: '',
   },
   logOut: () => {
     throw new Error('No Provider found!')
@@ -115,12 +117,14 @@ export const LoginProvider = (props: PropsWithChildren) => {
     if (
       typeof data !== 'object' ||
       !('unique_name' in data) ||
-      typeof data.unique_name !== 'string'
+      typeof data.unique_name !== 'string' ||
+      !('nameid' in data) ||
+      typeof data.nameid !== 'string'
     ) {
       return
     }
 
-    newUser = { email: data.unique_name }
+    newUser = { email: data.unique_name, id: data.nameid }
 
     setUser(newUser)
   }

@@ -1,28 +1,32 @@
 import { ActionIcon, Group, Text } from '@mantine/core'
 import { FiUser } from 'react-icons/fi'
+import { Link } from 'react-router-dom'
 import { UnrelatedUser } from '../models/UnrelatedUser'
-import { modals } from '@mantine/modals'
-import { useContext } from 'react'
-import { LoginContext } from '../LoginContext'
 
 export type FriendNavigationItemProps = {
   friend: UnrelatedUser
 }
 
 export const FriendNavigationItem = ({ friend }: FriendNavigationItemProps) => {
-  const loginContext = useContext(LoginContext)
+  // const loginContext = useContext(LoginContext)
 
-  const onClick = () => {
-    modals.openContextModal({
-      modal: 'user',
-      withCloseButton: false,
-      innerProps: { user: friend, loginContext },
-    })
-  }
+  // const onClick = () => {
+  //   modals.openContextModal({
+  //     modal: 'user',
+  //     withCloseButton: false,
+  //     innerProps: { user: friend, loginContext },
+  //   })
+  // }
 
   return (
     <Group>
-      <ActionIcon radius="xl" size="xl" variant="default" onClick={onClick}>
+      <ActionIcon
+        radius="xl"
+        size="xl"
+        variant="default"
+        component={Link}
+        to={`/chat/${friend.id}`}
+      >
         <FiUser />
       </ActionIcon>
       <Text>{friend.displayName}</Text>

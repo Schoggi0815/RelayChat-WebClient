@@ -6,6 +6,7 @@ import {
 } from '@github/webauthn-json'
 import { get, post } from '../apiHelper'
 import { isTokenDto } from '../models/TokenDto'
+import { isUnrelateUser } from '../models/UnrelatedUser'
 
 export const base = '/api/v1/'
 
@@ -55,9 +56,11 @@ export const postFinishLogin = (
 export const postRefresh = (token: string, refreshToken: string) =>
   post(`${base}auth/refresh`, { body: { token, refreshToken } }, isTokenDto)
 
-export const getUserInformation = (abort: AbortSignal, jwt: string) =>
-  get(
-    `${base}user/me`,
-    { jwt, abort },
-    (value: unknown) => typeof value === 'string'
-  )
+export const getMyUserInformation = (abort: AbortSignal, jwt: string) =>
+  get(`${base}users/me`, { jwt, abort }, isUnrelateUser)
+
+export const getUserInformation = (
+  userId: string,
+  abort: AbortSignal,
+  jwt: string
+) => get(`${base}users/${userId}`, { jwt, abort }, isUnrelateUser)
