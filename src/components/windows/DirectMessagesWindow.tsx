@@ -14,19 +14,13 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { FormEvent, useContext, useEffect, useRef, useState } from 'react'
 import { FiSend, FiUser } from 'react-icons/fi'
 import { useParams } from 'react-router-dom'
+import { getMyUserInformation, getUserInformation } from '../../api/common'
 import { getMessages, sendNewMessage } from '../../api/messages'
 import { useAuthedRequest } from '../../hooks/useAuthedRequest'
 import { LoginContext } from '../../LoginContext'
 import { isDirectMessage } from '../../models/DirectMessage'
 import { isListOf } from '../../utils'
 import { RelayChatAppShell } from '../app-shell/RelayChatAppShell'
-import { getMyUserInformation, getUserInformation } from '../../api/common'
-
-type MappedMessage = {
-  senderId: string
-  key: string
-  messages: { id: string; message: string }[]
-}
 
 export const DirectMessagesWindow = () => {
   const { toId } = useParams()
@@ -88,31 +82,6 @@ export const DirectMessagesWindow = () => {
     event.preventDefault()
     await sendMessage()
   }
-
-  const mappedMessages = chatMessages?.reduce<MappedMessage[]>(
-    (previous: MappedMessage[], current) =>
-      previous[previous.length - 1]?.senderId === current.senderId
-        ? previous.map(mm =>
-            mm.key === previous[previous.length - 1].key
-              ? {
-                  ...previous[previous.length - 1],
-                  messages: [
-                    ...previous[previous.length - 1].messages,
-                    { id: current.id, message: current.message },
-                  ],
-                }
-              : mm
-          )
-        : [
-            ...previous,
-            {
-              senderId: current.senderId,
-              key: current.id,
-              messages: [{ message: current.message, id: current.id }],
-            },
-          ],
-    []
-  )
 
   return (
     <RelayChatAppShell>
