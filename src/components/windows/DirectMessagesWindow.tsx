@@ -15,12 +15,13 @@ import { FormEvent, useContext, useEffect, useRef, useState } from 'react'
 import { FiSend, FiUser } from 'react-icons/fi'
 import { useParams } from 'react-router-dom'
 import { getMyUserInformation, getUserInformation } from '../../api/common'
-import { getMessages, sendNewMessage } from '../../api/messages'
+import { getMessages } from '../../api/messages'
 import { useAuthedRequest } from '../../hooks/useAuthedRequest'
 import { LoginContext } from '../../LoginContext'
-import { isDirectMessage } from '../../models/DirectMessage'
+import { DirectMessage, isDirectMessage } from '../../models/DirectMessage'
 import { isListOf } from '../../utils'
 import { RelayChatAppShell } from '../app-shell/RelayChatAppShell'
+import { SignalRContext } from '../SignalRContext'
 
 export const DirectMessagesWindow = () => {
   const { toId } = useParams()
@@ -32,9 +33,12 @@ export const DirectMessagesWindow = () => {
   const viewport = useRef<HTMLDivElement>(null)
 
   const getChatMessagesAuthed = useAuthedRequest(getMessages)
-  const sendMessageAuthed = useAuthedRequest(sendNewMessage)
   const getMyUserAuthed = useAuthedRequest(getMyUserInformation)
   const getUserInfoAuthed = useAuthedRequest(getUserInformation)
+
+  const { connection, connectionState } = useContext(SignalRContext)
+
+  useEffect(() => console.log(connectionState), [connectionState])
 
   const queryClient = useQueryClient()
 
@@ -61,22 +65,32 @@ export const DirectMessagesWindow = () => {
   }, [chatMessages])
 
   const { mutateAsync: sendMessage } = useMutation({
-    mutationFn: () =>
-      sendMessageAuthed(toId ?? '', currentText, new Date().toISOString()),
-    onSuccess: directMessage => {
-      const currentMessages = queryClient.getQueryData([
-        'direct-messages',
-        toId,
-      ])
-      if (isListOf(isDirectMessage)(currentMessages)) {
-        queryClient.setQueryData(
-          ['direct-messages', toId],
-          [...currentMessages, directMessage]
-        )
-      }
-      setCurrentText('')
-    },
+    mutationFn: async () =>
+      await connection?.send(
+        'SendMessage',
+        currentText,
+        toId ?? '',
+        new Date().toISOString()
+      ),
+    onSuccess: () => setCurrentText(''),
   })
+
+  useEffect(() => {
+    if (connection) {
+      connection.on('ReceiveMessage', (message: DirectMessage) => {
+        const currentMessages = queryClient.getQueryData([
+          'direct-messages',
+          toId,
+        ])
+        if (isListOf(isDirectMessage)(currentMessages)) {
+          queryClient.setQueryData(
+            ['direct-messages', toId],
+            [...currentMessages, message]
+          )
+        }
+      })
+    }
+  }, [connection, queryClient, toId])
 
   const onSubmit = async (event: FormEvent) => {
     event.preventDefault()

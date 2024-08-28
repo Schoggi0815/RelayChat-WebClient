@@ -11,13 +11,18 @@ export default defineConfig({
     proxy: {
       '/api': {
         target: 'http://localhost:8181',
-        changeOrigin: true
+        changeOrigin: true,
       },
       '/swagger': {
         target: 'http://localhost:8181',
-        changeOrigin: true
+        changeOrigin: true,
       },
-    }
+      '/signalr': {
+        target: 'http://localhost:8181',
+        changeOrigin: true,
+        ws: true,
+      },
+    },
   },
   plugins: [react()],
 })

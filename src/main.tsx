@@ -11,6 +11,7 @@ import { FriendsWindow } from './components/windows/FriendsWindow.tsx'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { FriendRequestsWindow } from './components/windows/FriendRequestsWindow.tsx'
 import { DirectMessagesWindow } from './components/windows/DirectMessagesWindow.tsx'
+import { SignalRProvider } from './components/SignalRContext.tsx'
 
 const theme = createTheme({
   autoContrast: true,
@@ -51,7 +52,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <QueryClientProvider client={queryClient}>
         <ModalsProvider>
           <LoginProvider>
-            <RouterProvider router={router} />
+            <SignalRProvider>
+              <RouterProvider router={router} />
+            </SignalRProvider>
           </LoginProvider>
         </ModalsProvider>
       </QueryClientProvider>
