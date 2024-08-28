@@ -1,19 +1,17 @@
-import { get, post } from '../apiHelper'
+import { get } from '../apiHelper'
 import { isDirectMessage } from '../models/DirectMessage'
-import { isListOf } from '../utils'
+import { isPagination } from '../models/Pagination'
 import { base } from './common'
 
-export const getMessages = (otherId: string, abort: AbortSignal, jwt: string) =>
-  get(`${base}messages/${otherId}`, { abort, jwt }, isListOf(isDirectMessage))
-
-export const sendNewMessage = (
-  toId: string,
-  message: string,
-  sentAt: string,
+export const getMessages = (
+  otherId: string,
+  offset: number,
+  take: number,
+  abort: AbortSignal,
   jwt: string
 ) =>
-  post(
-    `${base}messages/${toId}`,
-    { jwt, body: { message, sentAt } },
-    isDirectMessage
+  get(
+    `${base}messages/${otherId}?offset=${offset}&take=${take}`,
+    { abort, jwt },
+    isPagination(isDirectMessage)
   )

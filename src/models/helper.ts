@@ -1,3 +1,5 @@
+import { isListOf } from '../utils'
+
 export const isObject = (
   value: unknown
 ): value is Record<string | number | symbol, unknown> =>
@@ -28,6 +30,12 @@ export const hasProp = <TObject, TName extends keyof TObject>(
   propertyName: TName,
   type: NoInfer<TypeString<TObject[TName]>>
 ) => propertyName in value && typeof value[propertyName] === type
+
+export const hasArrayProp = <TProp>(
+  value: Record<string | number | symbol, unknown>,
+  propertyName: string,
+  isProp: (propValue: unknown) => propValue is TProp
+) => propertyName in value && isListOf(isProp)(value[propertyName])
 
 export const hasPropObject = <TProp>(
   value: Record<string | number | symbol, unknown>,
