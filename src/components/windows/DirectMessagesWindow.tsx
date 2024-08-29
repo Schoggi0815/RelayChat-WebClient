@@ -223,7 +223,14 @@ export const DirectMessagesWindow = () => {
               return (
                 <>
                   {isNewDay && (
-                    <Divider label={thisDate.toLocaleDateString()} />
+                    <Divider
+                      label={thisDate.toLocaleDateString(undefined, {
+                        weekday: 'long',
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric',
+                      })}
+                    />
                   )}
                   <DirectMessageItem
                     key={message.id}
