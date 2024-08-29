@@ -58,7 +58,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
             </SignalRProvider>
           </LoginProvider>
         </ModalsProvider>
-        <ReactQueryDevtools initialIsOpen={false} />
+        <ReactQueryDevtools initialIsOpen={false} buttonPosition="top-left" />
       </QueryClientProvider>
     </MantineProvider>
   </React.StrictMode>

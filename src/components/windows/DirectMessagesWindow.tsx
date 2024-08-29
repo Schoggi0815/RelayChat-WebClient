@@ -177,7 +177,7 @@ export const DirectMessagesWindow = () => {
 
   const onScroll = useCallback(
     ({ y }: { x: number; y: number }) => {
-      if (y === 0 && !isFetching && hasNextPage) {
+      if (y <= 300 && !isFetching && hasNextPage) {
         fetchNextPage()
       }
     },
@@ -195,30 +195,34 @@ export const DirectMessagesWindow = () => {
           onScrollPositionChange={onScroll}
         >
           <Stack gap={0}>
-            {isLoading
-              ? [...Array(10).keys()].map(i => (
-                  <Group key={i}>
-                    <Skeleton height={44} circle />
-                    <Skeleton height={20} width={150} />
-                  </Group>
-                ))
-              : allMessages?.map((message, index) => {
-                  const isFirstOfGroup =
-                    allMessages[index - 1]?.senderId !== message.senderId
-                  return (
-                    <DirectMessageItem
-                      key={message.id}
-                      message={message}
-                      alignRight={message.senderId === user.id}
-                      showUsername={isFirstOfGroup}
-                      username={
-                        message.senderId === user.id
-                          ? you?.displayName
-                          : otherUser?.displayName
-                      }
-                    />
-                  )
-                })}
+            {(hasNextPage || isLoading) &&
+              [...Array(5).keys()].map(i => (
+                <Group
+                  key={i}
+                  mb="sm"
+                  className={i % 2 === 0 ? 'flex-row-reverse' : 'flex-row'}
+                >
+                  <Skeleton height={44} circle />
+                  <Skeleton height={20} flex={1} />
+                </Group>
+              ))}
+            {allMessages?.map((message, index) => {
+              const isFirstOfGroup =
+                allMessages[index - 1]?.senderId !== message.senderId
+              return (
+                <DirectMessageItem
+                  key={message.id}
+                  message={message}
+                  alignRight={message.senderId === user.id}
+                  showUsername={isFirstOfGroup}
+                  username={
+                    message.senderId === user.id
+                      ? you?.displayName
+                      : otherUser?.displayName
+                  }
+                />
+              )
+            })}
           </Stack>
         </ScrollAreaAutosize>
         <form onSubmit={onSubmit}>
