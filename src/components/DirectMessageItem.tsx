@@ -42,7 +42,7 @@ export const DirectMessageItem = ({
                 {new Date(message.sentAt).toLocaleTimeString(undefined, {
                   hour: '2-digit',
                   minute: '2-digit',
-                  hourCycle: 'h24',
+                  hourCycle: 'h23',
                 })}
               </Text>
             </Group>
@@ -70,7 +70,7 @@ export const DirectMessageItem = ({
             {new Date(message.sentAt).toLocaleTimeString(undefined, {
               hour: '2-digit',
               minute: '2-digit',
-              hourCycle: 'h24',
+              hourCycle: 'h23',
             })}
           </Text>
           <Text
