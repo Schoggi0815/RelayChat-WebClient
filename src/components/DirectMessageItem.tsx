@@ -27,6 +27,7 @@ export const DirectMessageItem = ({
       }}
       wrap="nowrap"
       w="100%"
+      mt={showUsername ? 'md' : undefined}
     >
       {showUsername ? (
         <>

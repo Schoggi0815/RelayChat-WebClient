@@ -1,5 +1,6 @@
 import {
   ActionIcon,
+  Divider,
   Group,
   ScrollAreaAutosize,
   Skeleton,
@@ -207,20 +208,35 @@ export const DirectMessagesWindow = () => {
                 </Group>
               ))}
             {allMessages?.map((message, index) => {
+              const lastMessage: DirectMessage | undefined =
+                allMessages[index - 1]
+              const lastDate = new Date(lastMessage?.sentAt)
+              const thisDate = new Date(message.sentAt)
+              const isNewDay =
+                lastMessage !== undefined &&
+                (lastDate.getDate() !== thisDate.getDate() ||
+                  lastDate.getMonth() !== thisDate.getMonth() ||
+                  lastDate.getFullYear() !== thisDate.getFullYear())
+
               const isFirstOfGroup =
-                allMessages[index - 1]?.senderId !== message.senderId
+                lastMessage?.senderId !== message.senderId || isNewDay
               return (
-                <DirectMessageItem
-                  key={message.id}
-                  message={message}
-                  alignRight={message.senderId === user.id}
-                  showUsername={isFirstOfGroup}
-                  username={
-                    message.senderId === user.id
-                      ? you?.displayName
-                      : otherUser?.displayName
-                  }
-                />
+                <>
+                  {isNewDay && (
+                    <Divider label={thisDate.toLocaleDateString()} />
+                  )}
+                  <DirectMessageItem
+                    key={message.id}
+                    message={message}
+                    alignRight={message.senderId === user.id}
+                    showUsername={isFirstOfGroup}
+                    username={
+                      message.senderId === user.id
+                        ? you?.displayName
+                        : otherUser?.displayName
+                    }
+                  />
+                </>
               )
             })}
           </Stack>
