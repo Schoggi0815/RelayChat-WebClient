@@ -49,7 +49,7 @@ export const DirectMessagesWindow = () => {
   const getUserInfoAuthed = useAuthedRequest(getUserInformation)
 
   const lastScrollHeight = useRef(0)
-  const lastPageCount = useRef(0)
+  const firstMessageId = useRef('')
 
   const { connection, connectionState } = useContext(SignalRContext)
 
@@ -127,10 +127,16 @@ export const DirectMessagesWindow = () => {
             }
 
             return {
-              pages: data.pages.map((p, i) =>
-                i === 0 ? { ...p, items: [message, ...p.items] } : p
-              ),
-              pageParams: data.pageParams.map(n => n + 1),
+              pages: [
+                {
+                  offset: 0,
+                  take: 1,
+                  hasMore: data.pages.length > 0,
+                  items: [message],
+                },
+                ...data.pages.map(p => ({ ...p, offset: p.offset + 1 })),
+              ],
+              pageParams: [0, ...data.pageParams.map(n => n + 1)],
             }
           }
         )
@@ -144,28 +150,27 @@ export const DirectMessagesWindow = () => {
   }
 
   useEffect(() => {
-    const pageCount = chatMessages?.pages.length ?? 0
     if (
       viewport.current != null &&
       'scrollTopMax' in viewport.current &&
       typeof viewport.current.scrollTopMax === 'number'
     ) {
-      if (pageCount === lastPageCount.current) {
-        console.log('lastScrollHeight', lastScrollHeight.current)
-        console.log('newScrollHeight', viewport.current.scrollTopMax)
-        console.log('scrollPos', viewport.current.scrollTop)
-
+      const newFirstId =
+        chatMessages?.pages[chatMessages.pages.length - 1]?.items[0]?.id
+      if (newFirstId !== firstMessageId.current) {
         if (lastScrollHeight.current === viewport.current.scrollTop) {
           viewport.current.scrollTop = viewport.current.scrollTopMax
         }
 
         lastScrollHeight.current = viewport.current.scrollTopMax
+        firstMessageId.current = newFirstId ?? ''
       } else if (viewport.current.scrollTopMax !== lastScrollHeight.current) {
         viewport.current.scrollTop =
-          viewport.current.scrollTopMax - lastScrollHeight.current
+          viewport.current.scrollTop +
+          viewport.current.scrollTopMax -
+          lastScrollHeight.current
 
         lastScrollHeight.current = viewport.current.scrollTopMax
-        lastPageCount.current = pageCount
       }
     }
   }, [chatMessages])

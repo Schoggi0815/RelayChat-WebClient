@@ -1,17 +1,18 @@
 import { createTheme, MantineProvider } from '@mantine/core'
 import '@mantine/core/styles.css'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { SignalRProvider } from './components/SignalRContext.tsx'
+import { DirectMessagesWindow } from './components/windows/DirectMessagesWindow.tsx'
+import { FriendRequestsWindow } from './components/windows/FriendRequestsWindow.tsx'
+import { FriendsWindow } from './components/windows/FriendsWindow.tsx'
 import { HomeWindow } from './components/windows/HomeWindow.tsx'
 import './index.css'
 import { LoginProvider } from './LoginContext.tsx'
 import { ModalsProvider } from './ModalsProvider.tsx'
-import { FriendsWindow } from './components/windows/FriendsWindow.tsx'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { FriendRequestsWindow } from './components/windows/FriendRequestsWindow.tsx'
-import { DirectMessagesWindow } from './components/windows/DirectMessagesWindow.tsx'
-import { SignalRProvider } from './components/SignalRContext.tsx'
 
 const theme = createTheme({
   autoContrast: true,
@@ -57,6 +58,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
             </SignalRProvider>
           </LoginProvider>
         </ModalsProvider>
+        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </MantineProvider>
   </React.StrictMode>
