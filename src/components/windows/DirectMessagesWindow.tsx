@@ -1,14 +1,10 @@
 import {
   ActionIcon,
-  Box,
   Group,
   ScrollAreaAutosize,
   Skeleton,
   Stack,
-  Text,
   Textarea,
-  ThemeIcon,
-  Title,
 } from '@mantine/core'
 import {
   useInfiniteQuery,
@@ -25,7 +21,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import { FiSend, FiUser } from 'react-icons/fi'
+import { FiSend } from 'react-icons/fi'
 import { useParams } from 'react-router-dom'
 import { getMyUserInformation, getUserInformation } from '../../api/common'
 import { getMessages } from '../../api/messages'
@@ -34,6 +30,7 @@ import { LoginContext } from '../../LoginContext'
 import { DirectMessage } from '../../models/DirectMessage'
 import { Pagination } from '../../models/Pagination'
 import { RelayChatAppShell } from '../app-shell/RelayChatAppShell'
+import { DirectMessageItem } from '../DirectMessageItem'
 import { SignalRContext } from '../SignalRContext'
 
 const PAGE_SIZE = 50
@@ -204,67 +201,17 @@ export const DirectMessagesWindow = () => {
                   const isFirstOfGroup =
                     allMessages[index - 1]?.senderId !== message.senderId
                   return (
-                    <Group
+                    <DirectMessageItem
                       key={message.id}
-                      align="flex-start"
-                      gap="xs"
-                      style={{
-                        flexDirection:
-                          message.senderId === user.id ? 'row-reverse' : 'row',
-                        alignSelf:
-                          message.senderId === user.id
-                            ? 'flex-end'
-                            : 'flex-start',
-                      }}
-                      wrap="nowrap"
-                      maw="80%"
-                    >
-                      {isFirstOfGroup ? (
-                        <>
-                          <ThemeIcon size="xl" radius="xl" variant="default">
-                            <FiUser />
-                          </ThemeIcon>
-                          <Stack gap={0}>
-                            <Title
-                              order={4}
-                              c="relay"
-                              ta={
-                                message.senderId === user.id ? 'end' : 'start'
-                              }
-                            >
-                              {message.senderId === user.id
-                                ? you?.displayName
-                                : otherUser?.displayName}
-                            </Title>
-                            <Text
-                              component="pre"
-                              ta={
-                                message.senderId === user.id ? 'end' : 'start'
-                              }
-                              style={{
-                                textWrap: 'wrap',
-                              }}
-                            >
-                              {message.message}
-                            </Text>
-                          </Stack>
-                        </>
-                      ) : (
-                        <>
-                          <Box w={44} h="100%" />
-                          <Text
-                            flex={1}
-                            component="pre"
-                            ta={message.senderId === user.id ? 'end' : 'start'}
-                            style={{
-                              textWrap: 'wrap',
-                            }}
-                          >
-                            {message.message}
-                          </Text>
-                        </>
-                      )}
-                    </Group>
+                      message={message}
+                      alignRight={message.senderId === user.id}
+                      showUsername={isFirstOfGroup}
+                      username={
+                        message.senderId === user.id
+                          ? you?.displayName
+                          : otherUser?.displayName
+                      }
+                    />
                   )
                 })}
           </Stack>
