@@ -1,4 +1,4 @@
-import { Group, ThemeIcon, Stack, Title, Box, Text } from '@mantine/core'
+import { Group, Stack, Text, ThemeIcon, Title } from '@mantine/core'
 import { FiUser } from 'react-icons/fi'
 import { DirectMessage } from '../models/DirectMessage'
 
