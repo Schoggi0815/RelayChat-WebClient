@@ -8,6 +8,7 @@ export type DirectMessageItemProps = {
   alignRight: boolean
   user: UnrelatedUser | undefined
   showUsername: boolean
+  firstOfDay: boolean
 }
 
 export const DirectMessageItem = ({
@@ -15,6 +16,7 @@ export const DirectMessageItem = ({
   alignRight,
   user,
   showUsername,
+  firstOfDay,
 }: DirectMessageItemProps) => {
   return (
     <Group
@@ -28,7 +30,7 @@ export const DirectMessageItem = ({
       }}
       wrap="nowrap"
       w="100%"
-      mt={showUsername ? 'md' : undefined}
+      mt={showUsername ? (firstOfDay ? 'xs' : 'md') : undefined}
     >
       {showUsername ? (
         <>

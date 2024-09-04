@@ -252,6 +252,7 @@ export const DirectMessagesWindow = () => {
                     alignRight={message.senderId === user.id}
                     showUsername={isFirstOfGroup}
                     user={message.senderId === user.id ? you : otherUser}
+                    firstOfDay={isNewDay}
                   />
                 </React.Fragment>
               )
