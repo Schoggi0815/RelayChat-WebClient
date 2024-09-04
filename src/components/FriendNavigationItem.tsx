@@ -1,5 +1,4 @@
 import { ActionIcon, Group, Text } from '@mantine/core'
-import { FiUser } from 'react-icons/fi'
 import { Link } from 'react-router-dom'
 import { UnrelatedUser } from '../models/UnrelatedUser'
 import { UserAvatar } from './UserAvatar'

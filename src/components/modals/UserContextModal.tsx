@@ -1,7 +1,6 @@
-import { Button, Group, Stack, Text, ThemeIcon } from '@mantine/core'
+import { Button, Group, Stack, Text } from '@mantine/core'
 import { ContextModalProps } from '@mantine/modals'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { FiUser } from 'react-icons/fi'
 import { LoginContextType } from '../../LoginContext'
 import { removeFriend } from '../../api/friends'
 import { useAuthedRequestWithContext } from '../../hooks/useAuthedRequestWithContext'

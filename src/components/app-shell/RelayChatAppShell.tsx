@@ -19,7 +19,7 @@ import {
 } from '@mantine/core'
 import { useQuery } from '@tanstack/react-query'
 import { PropsWithChildren, useContext, useState } from 'react'
-import { FiLogOut, FiUserPlus, FiUsers } from 'react-icons/fi'
+import { FiChevronDown, FiLogOut, FiUserPlus, FiUsers } from 'react-icons/fi'
 import { Link } from 'react-router-dom'
 import { LoginContext } from '../../LoginContext'
 import { getFriends, getUnreadFriendRequests } from '../../api/friends'
@@ -82,7 +82,18 @@ export const RelayChatAppShell = (
         </Group>
       </AppShellHeader>
       <AppShellNavbar>
-        <Stack gap={0} h="100%">
+        <Group h="100%" align="flex-start" gap={0}>
+          <Stack p={5}>
+            <ActionIcon variant="light" color="gray" size={50} radius="xl">
+              <FiChevronDown />
+            </ActionIcon>
+          </Stack>
+          <Divider orientation="vertical" />
+          <Stack flex={1}>
+            <Title order={2}>Friends</Title>
+          </Stack>
+        </Group>
+        {/* <Stack gap={0} h="100%">
           <UnstyledButton w="100%" className={classes.menuButton}>
             <Title>Dashboard</Title>
           </UnstyledButton>
@@ -187,7 +198,7 @@ export const RelayChatAppShell = (
           <UnstyledButton w="100%" className={classes.menuButton}>
             <Title>Settings</Title>
           </UnstyledButton>
-        </Stack>
+        </Stack> */}
       </AppShellNavbar>
     </AppShell>
   )

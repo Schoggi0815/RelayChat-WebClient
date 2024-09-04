@@ -23,7 +23,7 @@ export const DirectMessageItem = ({
       key={message.id}
       className="hover:bg-[var(--mantine-color-default-hover)] rounded-md group"
       align="flex-start"
-      gap="xs"
+      gap={7}
       style={{
         flexDirection: alignRight ? 'row-reverse' : 'row',
         alignSelf: alignRight ? 'flex-end' : 'flex-start',
@@ -34,13 +34,13 @@ export const DirectMessageItem = ({
     >
       {showUsername ? (
         <>
-          <UserAvatar size={44} user={user} />
+          <UserAvatar m={3} size={44} user={user} />
           <Stack gap={0}>
             <Group className={alignRight ? 'flex-row-reverse' : undefined}>
               <Title order={4} c="relay" ta={alignRight ? 'end' : 'start'}>
                 {user?.displayName}
               </Title>
-              <Text size="xs">
+              <Text size="xs" className="select-none">
                 {new Date(message.sentAt).toLocaleTimeString(undefined, {
                   hour: '2-digit',
                   minute: '2-digit',
@@ -61,10 +61,10 @@ export const DirectMessageItem = ({
       ) : (
         <>
           <Text
-            w={44}
+            w={50}
             size="xs"
             h="100%"
-            className="self-center opacity-0 group-hover:opacity-100"
+            className="self-center opacity-0 group-hover:opacity-100 select-none"
             ta="center"
             c="var(--mantine-color-gray-text)"
           >
