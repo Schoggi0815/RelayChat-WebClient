@@ -47,7 +47,6 @@ export const DirectMessageItem = ({
               </Text>
             </Group>
             <Text
-              component="pre"
               ta={alignRight ? 'end' : 'start'}
               style={{
                 textWrap: 'wrap',
@@ -75,10 +74,10 @@ export const DirectMessageItem = ({
           </Text>
           <Text
             flex={1}
-            component="pre"
             ta={alignRight ? 'end' : 'start'}
             style={{
               textWrap: 'wrap',
+              whiteSpace: 'pre-wrap',
             }}
           >
             {message.message}

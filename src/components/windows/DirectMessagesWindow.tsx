@@ -35,6 +35,7 @@ import { RelayChatAppShell } from '../app-shell/RelayChatAppShell'
 import { DirectMessageItem } from '../DirectMessageItem'
 import { SignalRContext } from '../SignalRContext'
 import { UserAvatar } from '../UserAvatar'
+import React from 'react'
 
 const PAGE_SIZE = 50
 
@@ -235,7 +236,7 @@ export const DirectMessagesWindow = () => {
               const isFirstOfGroup =
                 lastMessage?.senderId !== message.senderId || isNewDay
               return (
-                <>
+                <React.Fragment key={message.id}>
                   {isNewDay && (
                     <Divider
                       label={thisDate.toLocaleDateString(undefined, {
@@ -247,13 +248,12 @@ export const DirectMessagesWindow = () => {
                     />
                   )}
                   <DirectMessageItem
-                    key={message.id}
                     message={message}
                     alignRight={message.senderId === user.id}
                     showUsername={isFirstOfGroup}
                     user={message.senderId === user.id ? you : otherUser}
                   />
-                </>
+                </React.Fragment>
               )
             })}
           </Stack>
