@@ -1,18 +1,19 @@
-import { Group, Stack, Text, ThemeIcon, Title } from '@mantine/core'
-import { FiUser } from 'react-icons/fi'
+import { Group, Stack, Text, Title } from '@mantine/core'
 import { DirectMessage } from '../models/DirectMessage'
+import { UnrelatedUser } from '../models/UnrelatedUser'
+import { UserAvatar } from './UserAvatar'
 
 export type DirectMessageItemProps = {
   message: DirectMessage
   alignRight: boolean
-  username: string | undefined
+  user: UnrelatedUser | undefined
   showUsername: boolean
 }
 
 export const DirectMessageItem = ({
   message,
   alignRight,
-  username,
+  user,
   showUsername,
 }: DirectMessageItemProps) => {
   return (
@@ -31,13 +32,11 @@ export const DirectMessageItem = ({
     >
       {showUsername ? (
         <>
-          <ThemeIcon size="xl" radius="xl" variant="default">
-            <FiUser />
-          </ThemeIcon>
+          <UserAvatar size={44} user={user} />
           <Stack gap={0}>
             <Group className={alignRight ? 'flex-row-reverse' : undefined}>
               <Title order={4} c="relay" ta={alignRight ? 'end' : 'start'}>
-                {username}
+                {user?.displayName}
               </Title>
               <Text size="xs">
                 {new Date(message.sentAt).toLocaleTimeString(undefined, {

@@ -7,6 +7,7 @@ import { removeFriend } from '../../api/friends'
 import { useAuthedRequestWithContext } from '../../hooks/useAuthedRequestWithContext'
 import { isUnrelateUser, UnrelatedUser } from '../../models/UnrelatedUser'
 import { isListOf } from '../../utils'
+import { UserAvatar } from '../UserAvatar'
 
 export const UserContextModal = ({
   innerProps,
@@ -39,9 +40,7 @@ export const UserContextModal = ({
   return (
     <Stack>
       <Group>
-        <ThemeIcon size="xl" radius="xl" variant="default">
-          <FiUser />
-        </ThemeIcon>
+        <UserAvatar size={44} user={innerProps.user} />
         <Text>{innerProps.user.displayName}</Text>
       </Group>
       <Group justify="flex-end">

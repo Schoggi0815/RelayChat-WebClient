@@ -1,11 +1,12 @@
-import { ActionIcon, Group, Text, ThemeIcon } from '@mantine/core'
+import { ActionIcon, Group, Text } from '@mantine/core'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { FiPlus, FiUser } from 'react-icons/fi'
+import { FiPlus } from 'react-icons/fi'
 import { postFriendRequest } from '../api/friends'
 import { useAuthedRequest } from '../hooks/useAuthedRequest'
+import { isFriendRequest } from '../models/FriendRequest'
 import { UnrelatedUser } from '../models/UnrelatedUser'
 import { isListOf } from '../utils'
-import { isFriendRequest } from '../models/FriendRequest'
+import { UserAvatar } from './UserAvatar'
 
 export type FriendSearchUserProps = {
   user: UnrelatedUser
@@ -36,9 +37,7 @@ export const FriendSearchUser = ({ user }: FriendSearchUserProps) => {
 
   return (
     <Group align="center">
-      <ThemeIcon radius="xl" size="xl">
-        <FiUser />
-      </ThemeIcon>
+      <UserAvatar size={44} user={user} />
       <Text>{user.displayName}</Text>
       <ActionIcon
         radius="xl"

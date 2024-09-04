@@ -1,6 +1,5 @@
 import {
   ActionIcon,
-  Avatar,
   Divider,
   Group,
   ScrollAreaAutosize,
@@ -35,6 +34,7 @@ import { Pagination } from '../../models/Pagination'
 import { RelayChatAppShell } from '../app-shell/RelayChatAppShell'
 import { DirectMessageItem } from '../DirectMessageItem'
 import { SignalRContext } from '../SignalRContext'
+import { UserAvatar } from '../UserAvatar'
 
 const PAGE_SIZE = 50
 
@@ -196,7 +196,7 @@ export const DirectMessagesWindow = () => {
       }}
       asideChildren={
         <Stack p="xl">
-          <Avatar size="xl" name={otherUser?.displayName} color="initials" />
+          <UserAvatar size="xl" user={otherUser} />
           <Title>{otherUser?.displayName}</Title>
         </Stack>
       }
@@ -251,11 +251,7 @@ export const DirectMessagesWindow = () => {
                     message={message}
                     alignRight={message.senderId === user.id}
                     showUsername={isFirstOfGroup}
-                    username={
-                      message.senderId === user.id
-                        ? you?.displayName
-                        : otherUser?.displayName
-                    }
+                    user={message.senderId === user.id ? you : otherUser}
                   />
                 </>
               )

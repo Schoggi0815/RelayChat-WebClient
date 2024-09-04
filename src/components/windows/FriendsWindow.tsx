@@ -15,8 +15,8 @@ export const FriendsWindow = () => {
 
   return (
     <RelayChatAppShell>
-      <Title>Search for People</Title>
       <Stack>
+        <Title>Search for People</Title>
         {isLoading ? (
           <Loader />
         ) : (

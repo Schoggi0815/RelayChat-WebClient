@@ -1,11 +1,12 @@
-import { Group, ThemeIcon, ActionIcon, Text } from '@mantine/core'
-import { FiUser, FiCheck } from 'react-icons/fi'
-import { FriendRequest, isFriendRequest } from '../models/FriendRequest'
+import { ActionIcon, Group, Text } from '@mantine/core'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { isUnrelateUser } from '../models/UnrelatedUser'
-import { isListOf } from '../utils'
+import { FiCheck } from 'react-icons/fi'
 import { postAcceptFriendRequest } from '../api/friends'
 import { useAuthedRequest } from '../hooks/useAuthedRequest'
+import { FriendRequest, isFriendRequest } from '../models/FriendRequest'
+import { isUnrelateUser } from '../models/UnrelatedUser'
+import { isListOf } from '../utils'
+import { UserAvatar } from './UserAvatar'
 
 export type ReceivedFriendRequestItemProps = {
   recievedRequest: FriendRequest
@@ -40,9 +41,7 @@ export const ReceivedFriendRequestItem = ({
 
   return (
     <Group>
-      <ThemeIcon size="xl" radius="xl">
-        <FiUser />
-      </ThemeIcon>
+      <UserAvatar size={44} user={recievedRequest.sender} />
       <Text>{recievedRequest.sender?.displayName}</Text>
       <ActionIcon
         variant="light"

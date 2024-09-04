@@ -7,10 +7,10 @@ import {
   TabsPanel,
   TabsTab,
   Text,
-  ThemeIcon,
 } from '@mantine/core'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { FiInbox, FiSend, FiUser } from 'react-icons/fi'
+import { useEffect } from 'react'
+import { FiInbox, FiSend } from 'react-icons/fi'
 import {
   getReceivedFriendRequests,
   getSentFriendRequests,
@@ -19,7 +19,7 @@ import {
 import { useAuthedRequest } from '../../hooks/useAuthedRequest'
 import { RelayChatAppShell } from '../app-shell/RelayChatAppShell'
 import { ReceivedFriendRequestItem } from '../ReceivedFriendRequestItem'
-import { useEffect } from 'react'
+import { UserAvatar } from '../UserAvatar'
 
 export const FriendRequestsWindow = () => {
   const getSentAuthed = useAuthedRequest(getSentFriendRequests)
@@ -80,9 +80,7 @@ export const FriendRequestsWindow = () => {
             ) : (
               sentRequests?.map(sentRequest => (
                 <Group>
-                  <ThemeIcon size="xl" radius="xl">
-                    <FiUser />
-                  </ThemeIcon>
+                  <UserAvatar size={44} user={sentRequest.receiver} />
                   <Text>{sentRequest.receiver?.displayName}</Text>
                 </Group>
               ))
