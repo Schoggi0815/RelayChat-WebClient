@@ -1,11 +1,13 @@
 import {
   ActionIcon,
+  Avatar,
   Divider,
   Group,
   ScrollAreaAutosize,
   Skeleton,
   Stack,
   Textarea,
+  Title,
 } from '@mantine/core'
 import {
   useInfiniteQuery,
@@ -186,7 +188,19 @@ export const DirectMessagesWindow = () => {
   )
 
   return (
-    <RelayChatAppShell>
+    <RelayChatAppShell
+      aside={{
+        width: 500,
+        breakpoint: 1200,
+        collapsed: { desktop: false, mobile: true },
+      }}
+      asideChildren={
+        <Stack p="xl">
+          <Avatar size="xl" name={otherUser?.displayName} color="initials" />
+          <Title>{otherUser?.displayName}</Title>
+        </Stack>
+      }
+    >
       <Stack mah="100%" flex={1} justify="flex-end" p="sm" pt={0} pr={0}>
         <ScrollAreaAutosize
           offsetScrollbars

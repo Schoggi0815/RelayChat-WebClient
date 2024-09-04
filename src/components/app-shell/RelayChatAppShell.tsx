@@ -1,6 +1,8 @@
 import {
   ActionIcon,
   AppShell,
+  AppShellAside,
+  AppShellAsideConfiguration,
   AppShellHeader,
   AppShellMain,
   AppShellNavbar,
@@ -25,7 +27,14 @@ import { useAuthedRequest } from '../../hooks/useAuthedRequest'
 import { FriendNavigationItem } from '../FriendNavigationItem'
 import classes from './RelayChatAppShell.module.css'
 
-export const RelayChatAppShell = (props: PropsWithChildren<unknown>) => {
+export type RelayChatAppShellProps = {
+  aside?: AppShellAsideConfiguration
+  asideChildren?: React.ReactNode
+}
+
+export const RelayChatAppShell = (
+  props: PropsWithChildren<RelayChatAppShellProps>
+) => {
   const loginContext = useContext(LoginContext)
 
   const [openNavbarPanel, setOpenNavbarPanel] = useState<'Friends' | 'Servers'>(
@@ -57,10 +66,14 @@ export const RelayChatAppShell = (props: PropsWithChildren<unknown>) => {
       header={{
         height: 50,
       }}
+      aside={props.aside}
     >
       <AppShellMain display="flex" mah="100vh">
         {props.children}
       </AppShellMain>
+      {props.asideChildren && (
+        <AppShellAside>{props.asideChildren}</AppShellAside>
+      )}
       <AppShellHeader>
         <Group w="100%" justify="flex-end" align="center" p="sm">
           <ActionIcon onClick={loginContext.logOut}>
